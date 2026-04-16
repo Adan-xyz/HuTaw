@@ -1,4 +1,7 @@
+const dotenv = require('dotenv'); dotenv.config();
+const { connect } = require('../src/database/connection');
 const property = require('../src/database/models/property.js');
+const mongoose = require('mongoose');
 
 function getAddress(code) {
   const itemsPerBlock = 100;
@@ -19,7 +22,17 @@ function generateProperties() {
     });
   } return properties;
 }
-const properties = generateProperties();
-property.insertMany(properties).then(() => {
-  console.log('Properties inserted successfully');
-});
+
+(async () => {
+  try {
+    await connect();
+    const properties = generateProperties();
+    await property.insertMany(properties);
+    console.log('Properties inserted successfully');
+  } catch (error) {
+    console.error('Error:', error);
+    process.exit(1);
+  } finally {
+    await mongoose.disconnect();
+  }
+})();
