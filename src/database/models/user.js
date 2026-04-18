@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
-  id: {
+  uid: {
     type: String,
     required: true,
     unique: true
@@ -73,6 +73,35 @@ const userSchema = new mongoose.Schema({
     profitloss: {
       type: Number,
       default: 0
+    }
+  },
+
+
+  workplace: {
+    have: {
+      type: Boolean,
+      default: false,
+      required: true
+    },
+    promotion: {
+      type: Number,
+      default: 50
+    },
+    position: {
+      type: Number,
+      default: 1
+    },
+    dailyquota: {
+      type: Number,
+      default: 0
+    },
+    dailypay: {
+      type: Number,
+      default: 100
+    },
+    incentive: {
+      type: Number,
+      default: 0.1
     }
   }
 });

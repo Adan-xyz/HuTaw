@@ -12,11 +12,11 @@ function getAddress(code) {
 
 function generateProperties() {
    const properties = [];
-  for (let i = 1; i <= 1000; i++) {
+  for (let i = 1; i <= 2600; i++) {
     const address = getAddress(i);
     properties.push({
       id: i,
-      name: `Property ${i}`,
+      name: `${address}`,
       price: Math.floor(Math.random() * 1000000),
       description: `This is property ${i} located at ${address}.`
     });

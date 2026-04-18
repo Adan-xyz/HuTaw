@@ -8,7 +8,7 @@ module.exports = {
     .setName("profile")
     .setDescription("View your profile"),
   async execute(interaction) {
-    let data = await db.findOne({ id: interaction.user.id });
+    let data = await db.findOne({ uid: interaction.user.id });
 
     const condition = (x) => {
       if (x > 50) return "Good";
