@@ -55,7 +55,7 @@ function button(interaction) {
         .addSeparatorComponents(separator)
         .addActionRowComponents((actionrow) => actionrow.setComponents(button));
       
-      return interaction.reply({
+      return interaction.editReply({
         components: [container],
         files: [image],
         flags: MessageFlags.IsComponentsV2,
@@ -63,7 +63,8 @@ function button(interaction) {
       }
       
       
-      const text = rng > 50 ? "You've successfully found a job!" : "You have failed to get a job 🥀" + setTimeout(() => { back() }, 3000);
+      const text = rng > 50 ? "You've successfully found a job!" : "You have failed to get a job 🥀";
+      if (rng <= 50) setTimeout(() => { back() }, 3000);
       
       const tx = new TextDisplayBuilder()
         .setContent(`${text}`);

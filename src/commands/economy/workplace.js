@@ -9,6 +9,10 @@ module.exports = {
   async execute(interaction) {
     const data = await db.findOne({ uid: interaction.user.id });
 
+    if (!data) {
+      return interaction.reply({ content: "No profile found, please try again.", ephemeral: true });
+    }
+
     if (data.workplace.have === false) {
       const image = new AttachmentBuilder('./assets/images/workplace/EJA.jpg', { name: 'EJA.jpg' });
 
