@@ -1,6 +1,6 @@
 const emojis = require("../config/emojis.json");
 const db = require("../database/models/user.js");
-const { MessageFlags, TextDisplayBuilder } = require('discord.js');
+const { AttachmentBuilder, MessageFlags, TextDisplayBuilder, ButtonBuilder, ButtonStyle, ContainerBuilder, SeparatorBuilder, SeparatorSpacingSize, MediaGalleryBuilder } = require('discord.js');
 
 function button(interaction) {
   
@@ -23,9 +23,47 @@ function button(interaction) {
           have: true } });
         await data.save();
       };
+
+      const back = () => {
+        const image = new AttachmentBuilder('./assets/images/workplace/EJA.jpg', { name: 'EJA.jpg' });
+
+      const text = new TextDisplayBuilder()
+        .setContent("## Get a job!\n-# You have no job, find a job");
+
+      const media = new MediaGalleryBuilder()
+        .addItems([ {
+          media: {
+            url: `attachment://EJA.jpg`,
+          },
+        },
+      ]);
+      
+      const separator = new SeparatorBuilder()
+        .setDivider(true)
+        .setSpacing(SeparatorSpacingSize.Small);
+
+      const button = new ButtonBuilder()
+        .setCustomId("findjob")
+        .setLabel("Find job")
+        .setStyle(ButtonStyle.Secondary)
+        .setEmoji(emojis.search);
+
+      const container = new ContainerBuilder()
+        .setAccentColor(0x000000)
+        .addTextDisplayComponents(text)
+        .addMediaGalleryComponents(media)
+        .addSeparatorComponents(separator)
+        .addActionRowComponents((actionrow) => actionrow.setComponents(button));
+      
+      return interaction.reply({
+        components: [container],
+        files: [image],
+        flags: MessageFlags.IsComponentsV2,
+      });
+      }
       
       
-      const text = rng > 50 ? "You've successfully found a job!" : "You have failed to get a job";
+      const text = rng > 50 ? "You've successfully found a job!" : "You have failed to get a job 🥀" + setTimeout(() => { back() }, 3000);
       
       const tx = new TextDisplayBuilder()
         .setContent(`${text}`);
