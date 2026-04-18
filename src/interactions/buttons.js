@@ -14,7 +14,7 @@ function button(interaction) {
       components: [text], 
       flags: MessageFlags.IsComponentsV2 });
 
-    setTimeout(async (interaction) => {
+    setTimeout(async () => {
       let data = await db.findOne({ uid: interaction.user.id });
       
       let rng = Math.floor(Math.random() * 100) + 1;
