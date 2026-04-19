@@ -1,5 +1,5 @@
 const emojis = require("../config/emojis.json");
-const randomColor = require("../utils/color.js");
+const { randomColor } = require("../utils/color.js");
 const db = require("../database/models/user.js");
 const {
   AttachmentBuilder,
