@@ -17,6 +17,96 @@ const {
   MessageFlags,
 } = require("discord.js");
 
+async function workplace(interaction) {
+  const data = await db.findOne({ uid: interaction.user.id });
+
+  const avatar = interaction.user.displayAvatarURL({ size: 1024 });
+
+  const thumbnail = new ThumbnailBuilder({ media: { url: `${avatar}` } });
+
+  const promotion = new TextDisplayBuilder().setContent(
+    `### ${data.workplace.promotion}% Until your promotion`,
+  );
+
+  const money = new TextDisplayBuilder().setContent(
+    `${emojis.money} \`$${numberSeparator(1000, 2)}\``,
+  );
+
+  const separator = new SeparatorBuilder()
+    .setDivider(true)
+    .setSpacing(SeparatorSpacingSize.Small);
+
+  const position = (x) => {
+    const y = {
+      1: "Intern",
+      2: "Staff",
+      3: "Assistant Manager",
+      4: "Manager",
+      5: "Director",
+      6: "CEO",
+    };
+    return y[x];
+  };
+
+  const salary = {
+    dp:
+      data.workplace.dailyquota >= 100
+        ? data.workplace.dailypay * 2
+        : data.workplace.dailypay,
+    iv:
+      data.workplace.dailyquota >= 100
+        ? data.workplace.incentive * 2
+        : data.workplace.incentive,
+  };
+
+  const incentive = (salary.dp * salary.iv) / 100;
+
+  const text = new TextDisplayBuilder().setContent(`**Daily quota**\n**${data.workplace.dailyquota}%**\n\n${position(3)}\nDaily pay: $${salary.dp}\nIncentive: $${incentive.toFixed(2)}`);
+
+  const resign = new ButtonBuilder()
+    .setCustomId("resign")
+    .setLabel("Resign")
+    .setStyle(ButtonStyle.Secondary);
+
+  const title = new SectionBuilder()
+    .addTextDisplayComponents(promotion)
+    .setButtonAccessory(resign)
+    .addTextDisplayComponents(money);
+
+  const section = new SectionBuilder()
+    .setThumbnailAccessory(thumbnail)
+    .addTextDisplayComponents(text);
+
+  const work = new ButtonBuilder()
+    .setCustomId("work")
+    .setLabel("Work")
+    .setStyle(ButtonStyle.Primary);
+
+  const taptap = new ButtonBuilder()
+    .setCustomId("click")
+    .setLabel("Click")
+    .setStyle(ButtonStyle.Primary);
+
+  const container = new ContainerBuilder()
+    .setAccentColor(randomColor)
+    .addSectionComponents(title)
+    .addSeparatorComponents(separator)
+    .addSectionComponents(section)
+    .addSeparatorComponents(separator)
+    .addActionRowComponents((actionrow) =>
+      actionrow.setComponents(work, taptap),
+    );
+
+  const respond = interaction.isButton()
+    ? (opts) => interaction.update(opts)
+    : (opts) => interaction.reply(opts);
+
+  return respond({
+    components: [container],
+    flags: MessageFlags.IsComponentsV2,
+  });
+}
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName("workplace")
@@ -72,91 +162,7 @@ module.exports = {
       });
     }
 
-    function workplace(interaction) {
-
-    const avatar = interaction.user.displayAvatarURL({ size: 1024 });
-
-    const thumbnail = new ThumbnailBuilder({ media: { url: `${avatar}` } });
-
-    const promotion = new TextDisplayBuilder().setContent(
-      `### ${data.workplace.promotion}% Until your promotion`,
-    );
-
-    const money = new TextDisplayBuilder().setContent(
-      `${emojis.money} \`$${numberSeparator(1000, 2)}\``,
-    );
-    
-    const separator = new SeparatorBuilder()
-      .setDivider(true)
-      .setSpacing(SeparatorSpacingSize.Small);
-
-    const position = (x) => {
-      const y = {
-        1: "Intern",
-        2: "Staff",
-        3: "Assistant Manager",
-        4: "Manager",
-        5: "Director",
-        6: "CEO",
-      };
-      return y[x];
-    };
-
-    const salary = {
-      dp:
-        data.workplace.dailyquota >= 100
-          ? data.workplace.dailypay * 2
-          : data.workplace.dailypay,
-      iv:
-        data.workplace.dailyquota >= 100
-          ? data.workplace.incentive * 2
-          : data.workplace.incentive,
-    };
-
-    const incentive = (salary.dp * salary.iv) / 100;
-
-    const text = new TextDisplayBuilder().setContent(`**Daily quota**\n**${data.workplace.dailyquota}%**\n\n${position(3)}\nDaily pay: $${salary.dp}\nIncentive: $${incentive.toFixed(2)}`);
-
-    const resign = new ButtonBuilder()
-      .setCustomId("resign")
-      .setLabel("Resign")
-      .setStyle(ButtonStyle.Secondary);
-
-    const title = new SectionBuilder()
-      .addTextDisplayComponents(promotion)
-      .setButtonAccessory(resign)
-      .addTextDisplayComponents(money);
-
-    const section = new SectionBuilder()
-      .setThumbnailAccessory(thumbnail)
-      .addTextDisplayComponents(text);
-
-    const work = new ButtonBuilder()
-      .setCustomId("work")
-      .setLabel("Work")
-      .setStyle(ButtonStyle.Primary);
-
-    const taptap = new ButtonBuilder()
-      .setCustomId("click")
-      .setLabel("Click")
-      .setStyle(ButtonStyle.Primary);
-
-    const workplace = new ContainerBuilder()
-      .setAccentColor(randomColor)
-      .addSectionComponents(title)
-      .addSeparatorComponents(separator)
-      .addSectionComponents(section)
-      .addSeparatorComponents(separator)
-      .addActionRowComponents((actionrow) =>
-        actionrow.setComponents(work, taptap),
-      );
-
-    return interaction.reply({
-      components: [workplace],
-      flags: MessageFlags.IsComponentsV2,
-    });
-    } workplace(interaction);
+    return workplace(interaction);
   },
+  workplace,
 };
-
-module.exports = { workplace };

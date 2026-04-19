@@ -174,9 +174,7 @@ async function button(interaction) {
 
   // resign no
   if (interaction.customId === "resign_no") {
-    await interaction.deferUpdate();
-
-    workplace(interaction);
+    await workplace(interaction);
   }
 }
 
