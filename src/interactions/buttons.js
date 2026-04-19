@@ -1,5 +1,5 @@
-const emojis = require("../config/emojis.json");
-const { randomColor } = require("../utils/color.js");
+
+const color = require("../utils/color.js");const emojis = require("../config/emojis.json");
 const db = require("../database/models/user.js");
 const {
   AttachmentBuilder,
@@ -67,7 +67,7 @@ async function button(interaction) {
           .setEmoji(emojis.search);
 
         const container = new ContainerBuilder()
-          .setAccentColor(0x000000)
+          .setAccentColor(color)
           .addTextDisplayComponents(text)
           .addMediaGalleryComponents(media)
           .addSeparatorComponents(separator)
@@ -133,7 +133,7 @@ async function button(interaction) {
       .setStyle(ButtonStyle.Secondary);
 
     const constainer = new ContainerBuilder()
-      .setAccentColor(randomColor)
+      .setAccentColor(color)
       .addTextDisplayComponents(title)
       .addSeparatorComponents(separator)
       .addTextDisplayComponents(text)
