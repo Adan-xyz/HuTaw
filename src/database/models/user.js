@@ -85,7 +85,7 @@ const userSchema = new mongoose.Schema({
     },
     promotion: {
       type: Number,
-      default: 50
+      default: 0
     },
     position: {
       type: Number,
