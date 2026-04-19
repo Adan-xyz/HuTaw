@@ -1,4 +1,5 @@
 const emojis = require("../config/emojis.json");
+const randomColor = require("../utils/color.js");
 const db = require("../database/models/user.js");
 const {
   AttachmentBuilder,
@@ -113,28 +114,34 @@ async function button(interaction) {
   if (interaction.customId === "resign") {
     await interaction.deferUpdate();
 
-    const image = new AttachmentBuilder("./src/assets/images/resign.jpg", {
-      name: "resign.jpg",
-    });
-
-    const media = new MediaGalleryBuilder().addItems([
-      {
-        media: {
-          url: `attachment://resign.jpg`,
-        },
-      },
-    ]);
+    const title = new TextDisplayBuilder().setContent(`### Resign`);
     
-    const text = new TextDisplayBuilder().setContent(`Resigning...`);
+    const text = new TextDisplayBuilder().setContent(`Do you really want to resign?`);
+
+    const separator = new SeparatorBuilder()
+      .setDivider(true)
+      .setSpacing(SeparatorSpacingSize.Small);
+
+    const yes = new ButtonBuilder()
+      .setCustomId("yes")
+      .setLabel("Yes")
+      .setStyle(ButtonStyle.Secondary);
+
+    const no = new ButtonBuilder()
+      .setCustomId("no")
+      .setLabel("No")
+      .setStyle(ButtonStyle.Secondary);
 
     const constainer = new ContainerBuilder()
-      .setAccentColor(0x000000)
+      .setAccentColor(randomColor)
+      .addTextDisplayComponents(title)
+      .addSeparatorComponents(separator)
       .addTextDisplayComponents(text)
-      .addMediaGalleryComponents(media);
+      .addSeparatorComponents(separator)
+      .addActionRowComponents((actionrow) => actionrow.setComponents(yes, no));
 
     await interaction.editReply({
       components: [constainer],
-      files: [image],
       flags: MessageFlags.IsComponentsV2,
     });
 
