@@ -7,13 +7,12 @@ const {
   ButtonBuilder,
   ButtonStyle,
   ContainerBuilder,
-  SectionBuilder,
   SeparatorBuilder,
   SeparatorSpacingSize,
   MediaGalleryBuilder,
 } = require("discord.js");
 
-function button(interaction) {
+async function button(interaction) {
   // workplace
   
   // find job
@@ -40,7 +39,7 @@ function button(interaction) {
 
       const back = () => {
         const image = new AttachmentBuilder(
-          "./assets/images/workplace/EJA.jpg",
+          "./src/assets/images/workplace/eja.jpg",
           { name: "EJA.jpg" },
         );
 
@@ -100,9 +99,21 @@ function button(interaction) {
     }, 3000);
   }
 
+  // work
+  if (interaction.customId === "work") {
+    await interaction.deferUpdate();
+  }
+
+  // click
+  if (interaction.customId === "click") {
+    await interaction.deferUpdate();
+  }
+
   // resign
   if (interaction.customId === "resign") {
-    const image = new AttachmentBuilder("./assets/images/workplace/resign.jpg", {
+    await interaction.deferUpdate();
+
+    const image = new AttachmentBuilder("./src/assets/images/resign.jpg", {
       name: "resign.jpg",
     });
 
@@ -121,7 +132,7 @@ function button(interaction) {
       .addTextDisplayComponents(text)
       .addMediaGalleryComponents(media);
 
-    interaction.editReply({
+    await interaction.editReply({
       components: [constainer],
       files: [image],
       flags: MessageFlags.IsComponentsV2,

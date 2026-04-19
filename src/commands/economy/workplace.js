@@ -31,7 +31,7 @@ module.exports = {
     }
 
     if (data.workplace.have === false) {
-      const image = new AttachmentBuilder("./assets/images/workplace/EJA.jpg", {
+      const image = new AttachmentBuilder("./src/assets/images/workplace/eja.jpg", {
         name: "EJA.jpg",
       });
 
