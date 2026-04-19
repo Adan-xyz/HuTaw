@@ -1,4 +1,5 @@
 const { randomColor } = require("../utils/color.js");
+const { workplace } = require("../commands/economy/workplace.js")
 const emojis = require("../config/emojis.json");
 const db = require("../database/models/user.js");
 const {
@@ -123,12 +124,12 @@ async function button(interaction) {
       .setSpacing(SeparatorSpacingSize.Small);
 
     const yes = new ButtonBuilder()
-      .setCustomId("yes")
+      .setCustomId("resign_yes")
       .setLabel("Yes")
       .setStyle(ButtonStyle.Secondary);
 
     const no = new ButtonBuilder()
-      .setCustomId("no")
+      .setCustomId("resign_no")
       .setLabel("No")
       .setStyle(ButtonStyle.Secondary);
 
@@ -144,7 +145,38 @@ async function button(interaction) {
       components: [constainer],
       flags: MessageFlags.IsComponentsV2,
     });
+  }
 
+  // resign yes
+  if (interaction.customId === "resign_yes") {
+    await interaction.deferUpdate();
+
+    const title = new TextDisplayBuilder().setContent(`### Resignation`);
+
+    const text = new TextDisplayBuilder().setContent(`You are free from corporate slavery now!\n-# You've subbmitted your resignation`);
+
+    const separator = new SeparatorBuilder()
+      .setDivider(true)
+      .setSpacing(SeparatorSpacingSize.Small);
+
+    const constainer = new ContainerBuilder()
+      .setAccentColor(randomColor)
+      .addTextDisplayComponents(title)
+      .addSeparatorComponents(separator)
+      .addTextDisplayComponents(text);
+
+    await interaction.editReply({
+      components: [constainer],
+      flags: MessageFlags.IsComponentsV2,
+    });
+    
+  }
+
+  // resign no
+  if (interaction.customId === "resign_no") {
+    await interaction.deferUpdate();
+
+    workplace(interaction);
   }
 }
 

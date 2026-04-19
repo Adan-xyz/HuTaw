@@ -1,4 +1,5 @@
 const emojis = require("../../config/emojis.json");
+const { randomColor } = require("../../utils/color.js");
 const db = require("../../database/models/user.js");
 const { numberSeparator } = require("../../utils/text.js");
 const {
@@ -58,7 +59,7 @@ module.exports = {
         .setEmoji(emojis.search);
 
       const container = new ContainerBuilder()
-        .setAccentColor(0x000000)
+        .setAccentColor(randomColor)
         .addTextDisplayComponents(text)
         .addMediaGalleryComponents(media)
         .addSeparatorComponents(separator)
@@ -71,6 +72,8 @@ module.exports = {
       });
     }
 
+    function workplace(interaction) {
+
     const avatar = interaction.user.displayAvatarURL({ size: 1024 });
 
     const thumbnail = new ThumbnailBuilder({ media: { url: `${avatar}` } });
@@ -82,7 +85,7 @@ module.exports = {
     const money = new TextDisplayBuilder().setContent(
       `${emojis.money} \`$${numberSeparator(1000, 2)}\``,
     );
-
+    
     const separator = new SeparatorBuilder()
       .setDivider(true)
       .setSpacing(SeparatorSpacingSize.Small);
@@ -139,7 +142,7 @@ module.exports = {
       .setStyle(ButtonStyle.Primary);
 
     const workplace = new ContainerBuilder()
-      .setAccentColor(0x000000)
+      .setAccentColor(randomColor)
       .addSectionComponents(title)
       .addSeparatorComponents(separator)
       .addSectionComponents(section)
@@ -152,5 +155,8 @@ module.exports = {
       components: [workplace],
       flags: MessageFlags.IsComponentsV2,
     });
+    } workplace(interaction);
   },
 };
+
+module.exports = { workplace };
