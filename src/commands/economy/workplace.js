@@ -20,16 +20,12 @@ const {
 async function workplace(interaction) {
   const data = await db.findOne({ uid: interaction.user.id });
 
-  const avatar = interaction.user.displayAvatarURL({ size: 1024 });
+  const avatar = interaction.user.displayAvatarURL({ dynamic: true });
 
   const thumbnail = new ThumbnailBuilder({ media: { url: `${avatar}` } });
 
   const promotion = new TextDisplayBuilder().setContent(
     `### ${data.workplace.promotion}% Until your promotion`,
-  );
-
-  const money = new TextDisplayBuilder().setContent(
-    `${emojis.money} \`$${numberSeparator(1000, 2)}\``,
   );
 
   const separator = new SeparatorBuilder()
@@ -40,28 +36,39 @@ async function workplace(interaction) {
     const y = {
       1: "Intern",
       2: "Staff",
-      3: "Assistant Manager",
-      4: "Manager",
-      5: "Director",
-      6: "CEO",
+      3: "Manager",
+      4: "Director",
+      5: "CEO"
     };
     return y[x];
   };
 
+  const dailypay = data.workplace.position === 1 ? 100 : data.workplace.position === 2 ? 200 : data.workplace.position === 3 ? 300 : data.workplace.position === 4 ? 400 : data.workplace.position === 5 ? 500 : 0;
+  const incentive = data.workplace.position === 1 ? 0.1 : data.workplace.position === 2 ? 0.2 : data.workplace.position === 3 ? 0.3 : data.workplace.position === 4 ? 0.4 : data.workplace.position === 5 ? 0.5 : 0;
+
   const salary = {
     dp:
       data.workplace.dailyquota >= 100
-        ? data.workplace.dailypay * 2
-        : data.workplace.dailypay,
+        ? dailypay * 2
+        : dailypay,
     iv:
       data.workplace.dailyquota >= 100
-        ? data.workplace.incentive * 2
-        : data.workplace.incentive,
+        ? incentive * 2
+        : incentive,
   };
 
-  const incentive = (salary.dp * salary.iv) / 100;
+  const incentivex = (salary.dp * salary.iv) / 100;
 
-  const text = new TextDisplayBuilder().setContent(`**Daily quota**\n**${data.workplace.dailyquota}%**\n\n${position(3)}\nDaily pay: $${salary.dp}\nIncentive: $${incentive.toFixed(2)}`);
+  const isClick = (interaction) => {
+    const text = interaction.customId === "click" ? `\`+${incentivex}\`` : '';
+    return text;
+  }
+
+  const money = new TextDisplayBuilder().setContent(
+    `${emojis.money} \`$${numberSeparator(data.assets.money, 2)}\` ${isClick(interaction)}`,
+  );
+
+  const text = new TextDisplayBuilder().setContent(`**Daily quota**\n**${data.workplace.dailyquota}%**\n\n${position(data.workplace.position)}\nDaily pay: $${salary.dp}\nIncentive: $${incentivex.toFixed(2)}`);
 
   const resign = new ButtonBuilder()
     .setCustomId("resign")
@@ -77,10 +84,13 @@ async function workplace(interaction) {
     .setThumbnailAccessory(thumbnail)
     .addTextDisplayComponents(text);
 
+  const wb = data.workplace.dailyquota >= 100 ? true : false
+
   const work = new ButtonBuilder()
     .setCustomId("work")
     .setLabel("Work")
-    .setStyle(ButtonStyle.Primary);
+    .setStyle(ButtonStyle.Primary)
+    .setDisabled(wb);
 
   const taptap = new ButtonBuilder()
     .setCustomId("click")
@@ -117,7 +127,7 @@ module.exports = {
     if (!data) {
       return interaction.reply({
         content: "No profile found, please try again.",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
 

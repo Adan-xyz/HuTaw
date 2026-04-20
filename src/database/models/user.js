@@ -89,19 +89,12 @@ const userSchema = new mongoose.Schema({
     },
     position: {
       type: Number,
-      default: 1
+      default: 1,
+      required: true
     },
     dailyquota: {
       type: Number,
       default: 0
-    },
-    dailypay: {
-      type: Number,
-      default: 100
-    },
-    incentive: {
-      type: Number,
-      default: 0.1
     }
   }
 });

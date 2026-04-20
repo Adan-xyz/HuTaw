@@ -87,10 +87,18 @@ async function button(interaction) {
         rng > 50
           ? "You've successfully found a job!"
           : "You have failed to get a job 🥀";
-      if (rng <= 50)
+      
+      if (rng <= 50) {
         setTimeout(() => {
           back();
         }, 3000);
+      } else {
+        setTimeout(async (interaction) => {
+          await interaction.deferUpdate();
+          
+         await workplace(interaction);
+        }, 3000);
+      }
 
       const tx = new TextDisplayBuilder().setContent(`${text}`);
 
@@ -99,16 +107,6 @@ async function button(interaction) {
         flags: MessageFlags.IsComponentsV2,
       });
     }, 3000);
-  }
-
-  // work
-  if (interaction.customId === "work") {
-    await interaction.deferUpdate();
-  }
-
-  // click
-  if (interaction.customId === "click") {
-    await interaction.deferUpdate();
   }
 
   // resign
@@ -176,6 +174,40 @@ async function button(interaction) {
   if (interaction.customId === "resign_no") {
     await workplace(interaction);
   }
+
+  // work
+  if (interaction.customId === "work") {
+    await interaction.deferUpdate();
+  }
+
+  // click
+  if (interaction.customId === "click") {
+    const data = await db.findOne({ uid: interaction.user.id });
+
+    const dailypay = data.workplace.position === 1 ? 100 : data.workplace.position === 2 ? 200 : data.workplace.position === 3 ? 300 : data.workplace.position === 4 ? 400 : data.workplace.position === 5 ? 500 : 0;
+    const incentive = data.workplace.position === 1 ? 0.1 : data.workplace.position === 2 ? 0.2 : data.workplace.position === 3 ? 0.3 : data.workplace.position === 4 ? 0.4 : data.workplace.position === 5 ? 0.5 : 0;
+
+    const salary = {
+      dp:
+        data.workplace.dailyquota >= 100
+          ? dailypay * 2
+          : dailypay,
+      iv:
+        data.workplace.dailyquota >= 100
+          ? incentive * 2
+          : incentive,
+    };
+
+    const incentivex = (salary.dp * salary.iv) / 100;
+
+    data.assets.money += incentivex;
+    data.workplace.dailyquota += 10;
+    await data.save();
+
+    await workplace(interaction);
+
+  }
+  
 }
 
 module.exports = { button };
