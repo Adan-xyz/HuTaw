@@ -2,8 +2,8 @@
 
 _a discord bot with no purpose whatsoever, just for freedom, freedom, and while (true) { console.log('freedom'); }_
 
-[![Status](https://img.shields.io/badge/status-WIP-yellow.svg)](https://github.com/Adan-xyz/HuTaw)
-[![Languages](https://img.shields.io/badge/TypeScript-85.3%25-blue.svg)](https://github.com/Adan-xyz/HuTaw)
+[![Status](https://img.shields.io/badge/status-WIP-orange.svg)](https://github.com/Adan-xyz/HuTaw)
+[![Languages](https://img.shields.io/badge/JavaScript-100%25-yellow.svg)](https://github.com/Adan-xyz/HuTaw)
 
 ---
 
@@ -40,11 +40,8 @@ Features
 - Config-driven (via environment variables)
 
 Language Composition
-- TypeScript: 85.3%
-- JavaScript: 7.7%
-- CSS: 3.7%
-- HTML: 2.9%
-- Other: 0.4%
+- JavaScript: 100%
+- Other: 0.0%
 
 Status
 This project is actively under development. Expect breaking changes and frequent updates. Roadmap items are included below; features may be added, changed, or removed as experiments progress.
